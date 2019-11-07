@@ -51,7 +51,6 @@ uint8_t read6850(uint16_t address) {
         }
 		case ACIAData: {
             char data = input[input_processed_index++];
-            //char data=console.getc();
             input_processed_index %= sizeof(input);
             return data;
 			break;
@@ -70,10 +69,6 @@ void write6850(uint16_t address, uint8_t value) {
             // TODO: decode baudrate, mode, break control, interrupt
 			break;
 		case ACIAData: {
-            //static char buf[1];
-            //buf[0] = value;
-            //cdcacm_send_chunked_blocking(buf, sizeof(buf), usbd_dev);
-            //printf("%c",value);
             console.putc(value);
 			break;
         }
@@ -102,8 +97,6 @@ uint8_t read6502(uint16_t address) {
 
         // ROM
         if (address >= 0xc000) {
-                //const uint8_t *rom = &_binary____osi_bas_ROM_o_bin_start;
-
                 return rom[address - 0xc000];
         }
 
@@ -111,7 +104,6 @@ uint8_t read6502(uint16_t address) {
         if (address >= 0xa000 && address <= 0xbfff) {
                 return read6850(address);
 
-                //return console.getc();
         }
 
         return 0xff;
@@ -146,13 +138,11 @@ int main() {
     printf("6502 reset,,,...\n");
     reset6502();
     printf("6502 Starting...\n");
-    uint32_t start = ticks;
     do {
         if (console.readable())
           process_serial_input_byte(console.getc());
 
         step6502();
         led.toggle();
-        //printf("Ticks: %d\n",ticks);
     } while (1);
 }
